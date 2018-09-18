@@ -1,0 +1,11 @@
+AddDefaultCharset utf-8
+ 
+RewriteEngine on
+ 
+php_value upload_max_filesize 50M
+php_value post_max_size 50M
+php_value display_errors 1
+ 
+ErrorDocument 404 /404.php
+
+RewriteRule ^index.html$ index.php
