@@ -1,11 +1,13 @@
-AddDefaultCharset utf-8
- 
-RewriteEngine on
- 
-php_value upload_max_filesize 50M
-php_value post_max_size 50M
-php_value display_errors 1
- 
+php_flag display_errors On
+php_flag log_errors On
+php_value error_log /home/cabox/workspace/logs/errors.log
+php_value upload_max_filesize 10M
+php_value post_max_size 20M
+
 ErrorDocument 404 /404.php
 
-RewriteRule ^index.html$ index.php
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule (.*) index.php [L]
+Options +FollowSymlinks
