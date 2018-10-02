@@ -15,7 +15,8 @@ class Router{
 	
 	public function process()
 	{
-		$request = strtolower($_SERVER['REQUEST_URI']);
+		$url = $_SERVER['REQUEST_URI'];
+    $request = strtolower($url);
 		$path = preg_split("/\//", $request);
 		if(count($path)!=0)
     {
@@ -46,7 +47,7 @@ class Router{
           //проверка метода
           if(!method_exists($obj, $method))
           {
-            echo 'Required method not exists!';
+            echo "<BR>Required method not exists!";
             require_once PNF;
             die();
           }
