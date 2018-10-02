@@ -19,18 +19,25 @@ class Router{
 		$path = preg_split("/\//", $request);
 		if(count($path)!=0)
     {
-      echo "not null ";
+      echo "<BR>not null ";
       $controller = CTRLS.ucfirst($path[1]).".php";
+      $controller_name = ucfirst($path[1]);
       echo $controller;
-      if($this ->routes[])
-      if(file_exists($controller))
+      if($this->findController($controller_name))
       {
-        require_once($controller);
+        if(file_exists($controller))
+        {
+          require_once($controller);
+        }
+        else
+        {
+          echo "<BR>file not fount";
+          require_once PNF;
+        }
       }
       else
       {
-        echo " file not fount";
-        require_once PNF;
+        echo "<BR>Controller not found in array";
       }
     }
     else
@@ -39,9 +46,16 @@ class Router{
     }
 	}
   
-  private function findController( string $ctrl)
+  private function findController(string $ctrl)
   {
-    foreach()
+    for($i = 0;$i<count($this->routes['any']);$i++)
+    {
+      if($this->routes['any'][$i]['route']==$ctrl)
+      {
+        return true;
+      }
+    }
+    return false;
   }
   
   public function route(string $route, string $handler, string $method = "any")
@@ -52,10 +66,10 @@ class Router{
       $this->routes[$method] = [];
     }
     //добавление роута
-    $this->routes[$method][] = [
+    $this->routes[$method][] = array(
       'route'   => $route,
       'handler'  => $handler
-    ];
+    );
   }
 }
 ?>
