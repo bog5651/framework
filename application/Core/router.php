@@ -13,7 +13,7 @@ class Router{
 		return self::$instance;
 	}
 	
-	public static process()
+	public function process()
 	{
 		$request = $_SERVER['REQUEST_URI'];
 		echo "<div>".$request."<div>"
