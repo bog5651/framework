@@ -15,7 +15,8 @@ class Router{
   public static process()
   {
     $request = $_SERVER['REQUEST_URI'];
-    $metod
+    echo "<div>".$request."<div>"
+	echo APP."<BR>".ROOT
   }
 }
 ?>
