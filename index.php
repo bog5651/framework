@@ -1,7 +1,7 @@
 <?php
 define('ROOT',dirname(__FILE__).'/');
 define('APP', ROOT.'application/');
-define('CORE', APP.'core/');
+define('CORE', APP.'Core/');
 
 $scope = glob(CORE.'*');
 foreach($scope as $file)
