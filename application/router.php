@@ -1,5 +1,4 @@
 <?php
-echo "<BR> mars pidor";
   //загрузка роутера
   $router = Router::getInstance();
   //список роутов

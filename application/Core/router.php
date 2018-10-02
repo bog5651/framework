@@ -35,15 +35,14 @@ class Router{
             die();
           }
           $obj = new $controller_name();
-          if(array_key_exists(1,$path))
+          if(array_key_exists(2,$path))
           {
-            $method = $path[1];
+            $method = $path[2];
           }
           else
           {
             $method = 'index';
           }
-          
           //проверка метода
           if(!method_exists($obj, $method))
           {
@@ -54,6 +53,7 @@ class Router{
           else
           {
             $obj->$method();
+            return;
           }
         }
         else

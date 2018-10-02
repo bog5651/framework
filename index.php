@@ -11,7 +11,6 @@ foreach($scope as $file)
 	require_once($file);
 }
 require_once(APP.'router.php');
-require_once(CTRLS."Controller.php");
 $router = Router::getInstance();
 $router->process();
 
