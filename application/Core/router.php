@@ -17,7 +17,18 @@ class Router{
 	{
 		$request = $_SERVER['REQUEST_URI'];
 		$path = preg_split("/\//", $request);
-		if($path.lenght())
+		if(count($path)!=0)
+    {
+      echo "not null";
+      foreach($path as $tip)
+      {
+        echo $tip."<BR>";
+      }
+    }
+    else
+    {
+      die();
+    }
 		echo ''.APP.'<BR>'.ROOT.'';
 	}
   
