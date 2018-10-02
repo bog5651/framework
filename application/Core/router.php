@@ -16,8 +16,14 @@ class Router{
 	public function process()
 	{
 		$request = $_SERVER['REQUEST_URI'];
-		echo "<div>".$request."<div>"
-		echo APP."<BR>".ROOT
+		$path = preg_split("/\//", $request);
+		if($path.lenght())
+		echo ''.APP.'<BR>'.ROOT.'';
 	}
+  
+  public function route()
+  {
+    
+  }
 }
 ?>
