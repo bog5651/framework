@@ -1,6 +1,15 @@
 <?php
 abstract class Controller
 {
-  public static function index();
+  protected $loader = null;
+  protected $config = null;
+  
+  public function __construct()
+  {
+    $this->loader = new Loader();
+    $config = Configuration::getConfiguration();
+  }
+  
+  public abstract function index();
 }
 ?>
