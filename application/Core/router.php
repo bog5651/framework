@@ -15,26 +15,47 @@ class Router{
 	
 	public function process()
 	{
-		$request = $_SERVER['REQUEST_URI'];
+		$request = strtolower($_SERVER['REQUEST_URI']);
 		$path = preg_split("/\//", $request);
 		if(count($path)!=0)
     {
-      echo "not null";
-      foreach($path as $tip)
+      echo "not null ";
+      $controller = CTRLS.ucfirst($path[1]).".php";
+      echo $controller;
+      if($this ->routes[])
+      if(file_exists($controller))
       {
-        echo $tip."<BR>";
+        require_once($controller);
+      }
+      else
+      {
+        echo " file not fount";
+        require_once PNF;
       }
     }
     else
     {
       die();
     }
-		echo ''.APP.'<BR>'.ROOT.'';
 	}
   
-  public function route()
+  private function findController( string $ctrl)
   {
-    
+    foreach()
+  }
+  
+  public function route(string $route, string $handler, string $method = "any")
+  {
+    //добавление массива роутов по методу
+    if(empty($this->routes[$method]))
+    {
+      $this->routes[$method] = [];
+    }
+    //добавление роута
+    $this->routes[$method][] = [
+      'route'   => $route,
+      'handler'  => $handler
+    ];
   }
 }
 ?>

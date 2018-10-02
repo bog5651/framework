@@ -2,6 +2,8 @@
 define('ROOT',dirname(__FILE__).'/');
 define('APP', ROOT.'application/');
 define('CORE', APP.'Core/');
+define('CTRLS', APP.'controllers/');
+define('PNF', ROOT.'404.php');
 
 $scope = glob(CORE.'*');
 foreach($scope as $file)
