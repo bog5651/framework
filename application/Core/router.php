@@ -18,23 +18,27 @@ class Router{
 		$url = $_SERVER['REQUEST_URI'];
 		$request = strtolower($url);
 		$path = preg_split("/\//", $request);
-		if(count($path)!=0)
+		if(count($path)>1)
 		{
 			//echo "<BR>not null ";
-			$controller = CTRLS.ucfirst($path[1]).".php";
-			$controller_name = ucfirst($path[1]);
+      $controller_path = ucfirst($path[1]);
+      $controller_name = $this->getControllerName(ucfirst($path[1]));
+      $controller_file = CTRLS.$this->getControllerFile($controller_path);
+      //echo "<BR>name ".$controller_name;
+      //echo "<BR>file ".$controller_file;
 			//echo $controller;
-			if($this->findController($controller_name))
+			if($this->findController($controller_path))
 			{
-				if(file_exists($controller))
+				if(file_exists($controller_file))
 				{
-					require_once($controller);
+					require_once($controller_file);
 					if(!class_exists($controller_name))
 					{
 						echo 'Controller class not exists!';
 						require_once PNF;
 						die();
 					}
+          
 					$obj = new $controller_name();
 					if(array_key_exists(2,$path))
 					{
@@ -79,14 +83,39 @@ class Router{
   
   private function findController(string $ctrl)
   {
-	for($i = 0;$i<count($this->routes['any']);$i++)
-	{
-		if($this->routes['any'][$i]['route']==$ctrl)
-		{
-			return true;
-		}
-	}
-	return false;
+    echo "STRl = ".$ctrl;
+    for($i = 0;$i<count($this->routes['any']);$i++)
+    {
+      if($this->routes['any'][$i]['route']==$ctrl)
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  private function getControllerFile(string $ctrl)
+  {
+    for($i = 0;$i<count($this->routes['any']);$i++)
+    {
+      if($this->routes['any'][$i]['route']==$ctrl)
+      {
+        return $this->routes['any'][$i]['handler']."_Controller.php";
+      }
+    }
+    return -1;
+  }
+  
+  private function getControllerName(string $ctrl)
+  {
+    for($i = 0;$i<count($this->routes['any']);$i++)
+    {
+      if($this->routes['any'][$i]['route']==$ctrl)
+      {
+        return $this->routes['any'][$i]['handler'].'Controller';
+      }
+    }
+    return -1;
   }
   
   public function route(string $route, string $handler, string $method = "any")
