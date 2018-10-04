@@ -50,8 +50,7 @@ class Router
 						if (count($path) > 3) {
 							echo '<BR>count = ' . count($path);
 							$args[] = null;
-							$i = null;
-							for ($i = 3; i < count($path); $i++) {
+							for ($i = 3; $i < count($path); $i++) {
 								$args[$i] = $path[$i];
 							}
 							call_user_func_array([$controller_name, $method], $args);
