@@ -48,7 +48,9 @@ class Router
 						die();
 					} else {
 						if (count($path) > 3) {
+							echo '<BR>count = ' . count($path);
 							$args[] = null;
+							$i = null;
 							for ($i = 3; i < count($path); $i++) {
 								$args[$i] = $path[$i];
 							}
