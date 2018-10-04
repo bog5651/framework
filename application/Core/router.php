@@ -17,14 +17,14 @@ class Router
 	{
 		$url = $_SERVER['REQUEST_URI'];
 		$request = strtolower($url);
-		$path = preg_split("/\//", $request);
+		$path = explode("/", $request);
 		if (count($path) > 1) {
 			//echo "<BR>not null ";
 			$controller_path = ucfirst($path[1]);
 			$controller_name = $this->getControllerName(ucfirst($path[1]));
 			$controller_file = CTRLS . $this->getControllerFile($controller_path);
-      //echo "<BR>name ".$controller_name;
-      //echo "<BR>file ".$controller_file;
+			//echo "<BR>name ".$controller_name;
+			//echo "<BR>file ".$controller_file;
 			//echo $controller;
 			if ($this->findController($controller_path)) {
 				if (file_exists($controller_file)) {
@@ -47,8 +47,17 @@ class Router
 						require_once PNF;
 						die();
 					} else {
-						$obj->$method();
-						return;
+						if (count($path) > 3) {
+							$args[] = null;
+							for ($i = 3; i < count($path); $i++) {
+								$args[$i] = $path[$i];
+							}
+							call_user_func_array([$controller_name, $method], $args);
+							return;
+						} else {
+							$obj->$method();
+							return;
+						}
 					}
 				} else {
 					echo "<BR>file not fount";
