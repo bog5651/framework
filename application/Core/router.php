@@ -15,7 +15,7 @@ class Router
 
 	public function process()
 	{
-		$url = $_SERVER['REQUEST_URI'];
+		$url = preg_replace('~[?].*~', '', $_SERVER['REQUEST_URI']);
 		$request = strtolower($url);
 		$path = explode("/", $request);
 		if (count($path) > 1) {
@@ -48,10 +48,9 @@ class Router
 						die();
 					} else {
 						if (count($path) > 3) {
-							echo '<BR>count = ' . count($path);
-							$args[] = null;
+							//echo '<BR>count = ' . count($path);
 							for ($i = 3; $i < count($path); $i++) {
-								$args[$i] = $path[$i];
+								$args[] = $path[$i];
 							}
 							call_user_func_array([$controller_name, $method], $args);
 							return;
@@ -77,7 +76,7 @@ class Router
 
 	private function findController(string $ctrl)
 	{
-		echo "STRl = " . $ctrl;
+		//echo "STRl = " . $ctrl;
 		for ($i = 0; $i < count($this->routes['any']); $i++) {
 			if ($this->routes['any'][$i]['route'] == $ctrl) {
 				return true;
