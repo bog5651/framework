@@ -1,5 +1,5 @@
 <?php
-class ApiController {
+class ApiGetController {
     public function login()
     {
     }

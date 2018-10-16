@@ -12,6 +12,11 @@ class Router
 		}
 		return self::$instance;
 	}
+  
+  private function __construct() 
+  {
+    $this->routes = [];
+  }
 
 	public function process()
 	{
