@@ -3,13 +3,18 @@
 {
   public function index()
   {
-    echo '<h1>BASE INDEX</h1>';
+    echo '<h1>BASE login INDEX</h1>';
   } 
   
-  public function login(string $str  = "")
+  public function login(string $str  = null)
   {
-    echo'<h1>NOT BASE INDEX</h1>'.$str;
-    echo "<br>hello, ".IO::get("name");
+    if($str==null){
+      echo'<h1>login without param</h1>';
+      echo "<br>hello, ".IO::get("name");
+    } else {
+      echo'<h1>login with param</h1>';
+      echo "<br>hello, ".$str.IO::get("name");
+    }
   }
 }
 ?>
