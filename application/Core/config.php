@@ -25,15 +25,15 @@ class Configuration
   
   //общие настройки
   private $common = [
-    'base_url' => 'web_omstu-borntokill1361002.codeanyapp.com'
+    'base_url' => 'http://php-bog5668934694.codeanyapp.com'
   ];
   
   //настройки базы данных
   private $database = [
     'host' => 'localhost',
-    'dbname' => 'web_db',
-    'login' => 'web_user',
-    'password' => 'web_password',
+    'dbname' => 'db',
+    'login' => 'root',
+    'password' => '',
     'prefix' => ''
   ];
   

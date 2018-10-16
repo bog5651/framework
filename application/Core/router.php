@@ -16,17 +16,18 @@ class Router
 	public function process()
 	{
 		$url = preg_replace('~[?].*~', '', $_SERVER['REQUEST_URI']);
+		$type_request = strtolower($_SERVER['REQUEST_METHOD']);
 		$request = strtolower($url);
 		$path = explode("/", $request);
 		if (count($path) > 1) {
 			//echo "<BR>not null ";
 			$controller_path = ucfirst($path[1]);
-			$controller_name = $this->getControllerName(ucfirst($path[1]));
-			$controller_file = CTRLS . $this->getControllerFile($controller_path);
+			$controller_name = $this->findController(ucfirst($path[1]), $type_request) . 'Controller';
+			$controller_file = CTRLS . $this->findController($controller_path, $type_request) . '_Controller.php';
 			//echo "<BR>name ".$controller_name;
 			//echo "<BR>file ".$controller_file;
 			//echo $controller;
-			if ($this->findController($controller_path)) {
+			if ($this->findController($controller_path, $type_request) != false) {
 				if (file_exists($controller_file)) {
 					require_once($controller_file);
 					if (!class_exists($controller_name)) {
@@ -74,35 +75,20 @@ class Router
 		}
 	}
 
-	private function findController(string $ctrl)
+	private function findController(string $ctrl, string $metod)
 	{
 		//echo "STRl = " . $ctrl;
+		for ($i = 0; $i < count($this->routes[$metod]); $i++) {
+			if ($this->routes[$metod][$i]['route'] == $ctrl) {
+				return $this->routes[$metod][$i]['handler'];
+			}
+		}
 		for ($i = 0; $i < count($this->routes['any']); $i++) {
 			if ($this->routes['any'][$i]['route'] == $ctrl) {
-				return true;
+				return $this->routes['any'][$i]['handler'];
 			}
 		}
 		return false;
-	}
-
-	private function getControllerFile(string $ctrl)
-	{
-		for ($i = 0; $i < count($this->routes['any']); $i++) {
-			if ($this->routes['any'][$i]['route'] == $ctrl) {
-				return $this->routes['any'][$i]['handler'] . "_Controller.php";
-			}
-		}
-		return -1;
-	}
-
-	private function getControllerName(string $ctrl)
-	{
-		for ($i = 0; $i < count($this->routes['any']); $i++) {
-			if ($this->routes['any'][$i]['route'] == $ctrl) {
-				return $this->routes['any'][$i]['handler'] . 'Controller';
-			}
-		}
-		return -1;
 	}
 
 	public function route(string $route, string $handler, string $method = "any")

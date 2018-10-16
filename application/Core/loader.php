@@ -13,7 +13,7 @@ class Loader
     if (!file_exists($model_path)) {
       return null;
     }
-    //загрузка моделиS
+    //загрузка модели
     require_once($model_path);
     //проверка наличия класса модели
     $model_class = ucfirst($model) . 'Model';
