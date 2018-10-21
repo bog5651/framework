@@ -25,7 +25,7 @@ class Configuration
   
   //общие настройки
   private $common = [
-    'base_url' => 'http://php-bog5668934694.codeanyapp.com'
+    'base_url' => 'http://192.168.33.10'
   ];
   
   //настройки базы данных
@@ -33,7 +33,7 @@ class Configuration
     'host' => 'localhost',
     'dbname' => 'db',
     'login' => 'root',
-    'password' => '',
+    'password' => 'root',
     'prefix' => ''
   ];
   

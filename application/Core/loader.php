@@ -9,7 +9,7 @@ class Loader
     }
     $model = str_replace('_model', '', $model);
     //проверка наличия файла модели
-    $model_path = APP_PATH . 'application/models/' . $model . '_model.php';
+    $model_path = ROOT . 'application/models/' . $model . '_model.php';
     if (!file_exists($model_path)) {
       return null;
     }
