@@ -1,12 +1,12 @@
 <?php
 class BakerModel extends Model
 {
-    public function getBakerById(int $td)
+    public function getBakerById(int $id)
     {
         $row = $this->db->query('
         Select baker_name, salary  
         From bakers 
-        Where id_baker = ?;', [$id]);
+        Where id_baker = ?', [$id]);
         if (!empty($row)) {
             return $row[0];
         }
@@ -17,7 +17,7 @@ class BakerModel extends Model
     {
         $row = $this->db->query('
         Select baker_name, salary 
-        From bakers;', [$id]);
+        From bakers');
         if (!empty($row)) {
             return $row;
         }

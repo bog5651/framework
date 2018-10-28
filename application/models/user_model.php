@@ -95,16 +95,16 @@ class UserModel extends Model
     public function getPermission(int $id)
     {
         $row = $this->db->query('
-        SELECT name FROM permissons p
+        SELECT name, weight FROM permissons p
         INNER JOIN users u ON
             u.id_user = p.id_user
         INNER JOIN roles r ON
             p.id_role = r.id_role
-        WHERE u.id_user = ?;
+        WHERE u.id_user = ?
         ', [$id]);
         if(!empty($row))
         {
-            return $row[0]['name'];
+            return $row[0];
         }
         return false;
     }

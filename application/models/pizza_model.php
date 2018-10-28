@@ -5,9 +5,9 @@ class PizzaModel extends Model
     public function getPizzaById(int $id)
     {
         $row = $this->db->query('
-        Select name, cost 
-        From izdeliya 
-        Where id_izdelie = ?;', [$id]);
+        SELECT name, cost 
+        FROM izdeliya 
+        WHERE id_izdelie = ?', [$id]);
         if (!empty($row)) {
             return $row[0];
         }
@@ -17,8 +17,8 @@ class PizzaModel extends Model
     public function getAllPizza()
     {
         $row = $this->db->query('
-        Select name, cost 
-        From izdeliya;', []);
+        SELECT id_izdelie AS id, name, cost
+        FROM izdeliya');
         if (!empty($row)) {
             return $row;
         }
