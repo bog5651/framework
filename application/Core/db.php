@@ -26,15 +26,17 @@ class DB
 
     public function query(string $request, array $params = [])
     {
-        $lastId = $this->getLastId();
+        $type = strtolower(explode(' ', $request)[0]);
+        //$lastId = $this->getLastId();
         $statment = $this->connection->prepare($request);
         $result = $statment->execute($params);
         $this->error = $statment->errorInfo();
         if ($result) {
-            if ($this->getLastId() != $lastId) {
+            if ($type == "select")
+                return $statment->fetchAll(PDO::FETCH_ASSOC);
+            else {
                 return $result;
             }
-            return $statment->fetchAll(PDO::FETCH_ASSOC);
         }
         return $result;
     }

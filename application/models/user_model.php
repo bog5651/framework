@@ -48,9 +48,8 @@ class UserModel extends Model
 
     public function deleteUser(string $userId) : bool
     {
-        $res = $this->db->query('DELETE FROM users WHERE id_user = ?',[$userId]);
-        if($res)
-        {
+        $res = $this->db->query('DELETE FROM users WHERE id_user = ?', [$userId]);
+        if ($res) {
             return true;
         }
         return false;
@@ -91,5 +90,22 @@ class UserModel extends Model
             md5($password),
             $id
         ]);
+    }
+
+    public function getPermission(int $id)
+    {
+        $row = $this->db->query('
+        SELECT name FROM permissons p
+        INNER JOIN users u ON
+            u.id_user = p.id_user
+        INNER JOIN roles r ON
+            p.id_role = r.id_role
+        WHERE u.id_user = ?;
+        ', [$id]);
+        if(!empty($row))
+        {
+            return $row[0]['name'];
+        }
+        return false;
     }
 }
