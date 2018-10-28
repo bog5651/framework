@@ -26,13 +26,13 @@ class DB
 
     public function query(string $request, array $params = [])
     {
-        $type = strtolower(explode(' ', $request)[0]);
+        $type = strtolower(explode(' ', trim(str_replace(array("\r\n", "\r", "\n", "\t"), '', $request)))[0]);
         //$lastId = $this->getLastId();
         $statment = $this->connection->prepare($request);
         $result = $statment->execute($params);
         $this->error = $statment->errorInfo();
         if ($result) {
-            if ($type == "select")
+            if (strcasecmp($type, 'select') == 0)
                 return $statment->fetchAll(PDO::FETCH_ASSOC);
             else {
                 return $result;
