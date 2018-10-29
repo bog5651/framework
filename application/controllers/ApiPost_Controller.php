@@ -223,6 +223,66 @@ class ApiPostController extends Controller
         }
     }
 
+    public function addPizza()
+    {
+        $postRow = $this->apiPostRaw(true, true);
+        $data = $postRow->data;
+        $token = $postRow->token;
+        $session_model = $this->loader->getModel('session');
+        $user_id = $session_model->authentication($token);
+        if ($user_id < 0) {
+            echo json_encode([
+                'success' => 0,
+                'error' => [
+                    'code' => 105,
+                    'message' => 'Wrong token'
+                ]
+            ]);
+            die();
+        }
+        $pizza_model = $this->loader->getModel('pizza');
+        if (!property_exists($data, "pizza") || !property_exists($data->pizza, "struct")) {
+            echo json_encode([
+                'success' => 0,
+                'error' => [
+                    'code' => 105,
+                    'message' => 'Not found pizza or structure in JSON'
+                ]
+            ]);
+            die();
+        }
+        $pizza = $data->pizza;
+        $struct = $pizza->struct;
+        if (property_exists($data->pizza, "cost")) {
+            $cost = $pizza->cost;
+        } else {
+            $cost = 0;
+            $product_model = $this->loader->getModel('product');
+            foreach ($struct as $product) {
+                $cost += $product_model->getProductById($product->product_id)['cost'] * $product->count;
+            }
+        }
+        //echo $pizza->name.":".$cost;
+        $id = $pizza_model->add($pizza->name, $cost, $struct);
+        if ($id > 0) {
+            echo json_encode([
+                'success' => 1,
+                'cost' => $cost,
+                'id' => $id
+            ]);
+        } else {
+            echo json_encode([
+                'success' => 0,
+                'error' => [
+                    'code' => 105,
+                    'message' => 'Internal error'
+                ]
+            ]);
+            die;
+        }
+
+    }
+
     public function baker()
     {
         $postRow = $this->apiPostRaw(true, true);
@@ -292,7 +352,7 @@ class ApiPostController extends Controller
             ]);
             die();
         }
-        if (!property_exists($data, 'requests') || !property_exists($data, 'address')) {
+        if (!property_exists($data, 'request') || !property_exists($data->request, 'address')) {
             echo json_encode([
                 'success' => 0,
                 'error' => [
@@ -302,24 +362,38 @@ class ApiPostController extends Controller
             ]);
             die();
         }
-        $requests = $data->requests;
-        $address = $data->address;
+        $request = $data->request;
+        $address = $request->address;
+        $struct = $request->struct;
         $pizza_model = $this->loader->getModel('pizza');
         $cost = 0;
-        foreach ($requests as $request) {
-            $cost = $cost + $pizza_model->getPizzaById($request->id_pizza)['cost'];
+        foreach ($struct as $pizza) {
+            $cost = $cost + $pizza_model->getPizzaById($pizza->id_pizza)['cost'];
         }
         $cost = $cost + 551;
         $request_model = $this->loader->getModel('request');
+        //--------------------
         $time_now = date('h:i:s A', time());
-        $time_delivery = date('h:i:s A', time() + 3600); // +1hour
-        echo $time_delivery.' '.$time_now;
-        if ($request_model->add($address, $time_now, $time_delivery, $cost, $requests)) {
+        $time_delivery = date('h:i:s A', time() + 3600); // +1 hour
+        //--------------Мне этот блок не нравится. TODO спросить у препода "как надо?"
+        //echo $time_delivery . ' ' . $time_now;
+        $id = $request_model->add($address, $time_now, $time_delivery, $cost, $struct);
+        if ($id > 0) {
             echo json_encode([
                 'success' => 1,
                 'time_delivery' => $time_delivery,
-                'cost' => $cost
+                'cost' => $cost,
+                'id' => $id
             ]);
+        } else {
+            echo json_encode([
+                'success' => 0,
+                'error' => [
+                    'code' => 105,
+                    'message' => 'Internal error'
+                ]
+            ]);
+            die;
         }
     }
 

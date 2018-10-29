@@ -39,9 +39,25 @@ class PizzaModel extends Model
         return false;
     }
 
-    public function add(string $name, int $cost)
+    public function add(string $name, int $cost, array $struct)
     {
-
+        $row = $this->db->query('INSERT INTO izdeliya (name, cost) VALUES (?, ?)', [$name, $cost]);
+        if (!$row) {
+            echo json_encode($this->db->getError());
+            return $row;
+        }
+        $id = $this->db->getLastId();
+        foreach ($struct as $product) {
+            $row = $this->db->query('INSERT INTO structureIzdeliy (id_product, id_izdeliya, count_product) VALUES (?,?,?)', [$product->product_id, $id, $product->count]);
+            if (!$row) {
+                echo json_encode($this->db->getError());
+                return $row;
+            }
+        }
+        if ($row)
+            return $id;
+        else
+            return -1;
     }
 
     public function delete(int $id)

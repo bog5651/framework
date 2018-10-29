@@ -16,7 +16,7 @@ class RequestModel extends Model
 
     public function add(string $address, string $time_request, string $time_delivery, int $cost, array $requests)
     {
-        $row = $this->db->query('INSERT INTO reqests (user_address, time_reqest, time_delivery, cost) VALUES (?, ?, ?, ?);', [$address, $time_request, $time_delivery, $cost]);
+        $row = $this->db->query('INSERT INTO reqests (user_address, time_reqest, time_delivery, cost) VALUES (?, ?, ?, ?)', [$address, $time_request, $time_delivery, $cost]);
         if (!$row) {
             echo json_encode($this->db->getError());
             return $row;
@@ -30,9 +30,9 @@ class RequestModel extends Model
             }
         }
         if ($row)
-            return $row;
+            return $this->db->getLastId();
         else
-            return $row;
+            return -1;
     }
 
     public function delete(int $id)
