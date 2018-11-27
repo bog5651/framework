@@ -3,11 +3,13 @@ abstract class Controller
 {
   protected $loader = null;
   protected $config = null;
+  protected $view = null;
 
   public function __construct()
   {
     $this->loader = new Loader();
     $config = Configuration::getConfiguration();
+	$this->view = View::getInstanse();
   }
 
   public abstract function index();
@@ -30,25 +32,23 @@ abstract class Controller
     }
     //проверка наличия токена
     if ($token_flag) {
-      if (!property_exists($data, 'token')) {
+      if ($data != null) {
+        if (!property_exists($data, 'token')) {
+          echo json_encode([
+            'success' => 0,
+            'error' => [
+              'code' => 102,
+              'message' => 'Token section not exists'
+            ]
+          ]);
+          die();
+        }
+      } else {
         echo json_encode([
           'success' => 0,
           'error' => [
-            'code' => 102,
-            'message' => 'Token section not exists'
-          ]
-        ]);
-        die();
-      }
-    }
-    //проверка наличия данных
-    if ($data_flag) {
-      if (!property_exists($data, 'data')) {
-        echo json_encode([
-          'success' => 0,
-          'error' => [
-            'code' => 103,
-            'message' => 'Data section not exists'
+            'code' => 101,
+            'message' => 'Wrong JSON'
           ]
         ]);
         die();

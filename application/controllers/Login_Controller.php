@@ -3,11 +3,12 @@ class LoginController extends Controller
 {
   public function index()
   {
+    echo("<h>Login index metod<h>");
   }
 
-  public function login(string $user, string $password)
+  public function login()
   {
-    $db = db::getInstance();
+    echo ("<h>Login epta metod<h>");
   }
 }
 ?>

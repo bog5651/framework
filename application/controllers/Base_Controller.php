@@ -3,7 +3,7 @@ class BaseController extends Controller
 {
   public function index()
   {
-    echo '<h1>BASE INDEX</h1>';
+    echo '<h1>Home page</h1>';
   }
 }
 ?>

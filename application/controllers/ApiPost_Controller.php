@@ -7,7 +7,7 @@ class ApiPostController extends Controller
 
     public function login()
     {
-        $postRaw = $this->apiPostRaw()->data;
+        $postRaw = $this->apiPostRaw();
         if (empty($postRaw) || !property_exists($postRaw, 'login') || !property_exists($postRaw, 'password')) {
             echo json_encode([
                 'success' => 0,
@@ -64,7 +64,7 @@ class ApiPostController extends Controller
 
     public function register()
     {
-        $postRaw = $this->apiPostRaw()->data;
+        $postRaw = $this->apiPostRaw();
         if (empty($postRaw) || !property_exists($postRaw, 'login') || !property_exists($postRaw, 'password') || (!property_exists($postRaw, 'firstname')) || (!property_exists($postRaw, 'secondname'))) {
             echo json_encode([
                 'success' => 0,
@@ -121,10 +121,35 @@ class ApiPostController extends Controller
         }
     }
 
+    public function user()
+    {
+        $postRaw = $this->apiPostRaw(false, true);
+        $token = $postRaw->token;
+        $session_model = $this->loader->getModel('session');
+        $user_id = $session_model->authentication($token);
+        if ($user_id > 0) {
+            $user_model = $this->loader->getModel('user');
+            $user = $user_model->getUserById($user_id); 
+            echo json_encode([
+                'success' => 1,
+                'user' => $user
+            ]);
+            die();
+        }
+        echo json_encode([
+            'success' => 0,
+            'error' => [
+                'code' => 105,
+                'message' => 'Wrong token'
+            ]
+        ]);
+        die();
+    }
+
     public function deleteAccount()
     {
         $postRaw = $this->apiPostRaw(true, true);
-        $data = $postRaw->data;
+        $data = $postRaw;
         $token = $postRaw->token;
         $session_model = $this->loader->getModel('session');
         $user_id = $session_model->authentication($token);
@@ -174,7 +199,7 @@ class ApiPostController extends Controller
     public function pizza()
     {
         $postRow = $this->apiPostRaw(true, true);
-        $data = $postRow->data;
+        $data = $postRow;
         $token = $postRow->token;
         $session_model = $this->loader->getModel('session');
         $user_id = $session_model->authentication($token);
@@ -226,7 +251,7 @@ class ApiPostController extends Controller
     public function addPizza()
     {
         $postRow = $this->apiPostRaw(true, true);
-        $data = $postRow->data;
+        $data = $postRow;
         $token = $postRow->token;
         $session_model = $this->loader->getModel('session');
         $user_id = $session_model->authentication($token);
@@ -286,7 +311,7 @@ class ApiPostController extends Controller
     public function baker()
     {
         $postRow = $this->apiPostRaw(true, true);
-        $data = $postRow->data;
+        $data = $postRow;
         $token = $postRow->token;
         $session_model = $this->loader->getModel('session');
         $user_id = $session_model->authentication($token);
@@ -338,7 +363,7 @@ class ApiPostController extends Controller
     public function request()
     {
         $postRaw = $this->apiPostRaw(true, true);
-        $data = $postRaw->data;
+        $data = $postRaw;
         $token = $postRaw->token;
         $session_model = $this->loader->getModel('session');
         $user_id = $session_model->authentication($token);
@@ -375,7 +400,7 @@ class ApiPostController extends Controller
         //--------------------
         $time_now = date('h:i:s A', time());
         $time_delivery = date('h:i:s A', time() + 3600); // +1 hour
-        //--------------Мне этот блок не нравится. TODO спросить у препода "как надо?"
+        //--------------Мне этот блок не нравится. TODO спросить как надо
         //echo $time_delivery . ' ' . $time_now;
         $id = $request_model->add($address, $time_now, $time_delivery, $cost, $struct);
         if ($id > 0) {

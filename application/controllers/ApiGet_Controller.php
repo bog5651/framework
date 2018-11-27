@@ -1,5 +1,12 @@
 <?php
-class ApiGetController {
+class ApiGetController
+{
+
+    public function index()
+    {
+
+    }
+
     public function login()
     {
     }
