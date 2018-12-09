@@ -143,8 +143,7 @@ class ApiPostController extends Controller
                     'user' => $user
                 ]);
                 die();
-            }
-            else{
+            } else {
                 echo json_encode([
                     'success' => 0,
                     'error' => [
@@ -253,7 +252,59 @@ class ApiPostController extends Controller
             $pizzas = $pizza_model->getAllPizza();
             if (!empty($pizzas)) {
                 $json['success'] = 1;
-                $json['pizzas'] = $pizzas;
+                $json['pizza'] = $pizzas;
+                echo json_encode($json);
+            } else
+                echo json_encode([
+                'success' => 0,
+                'error' => [
+                    'code' => 105,
+                    'message' => 'Internal error'
+                ]
+            ]);
+            die;
+        }
+    }
+
+    public function product()
+    {
+        $postRow = $this->apiPostRaw(true, true);
+        $data = $postRow;
+        $token = $postRow->token;
+        $session_model = $this->loader->getModel('session');
+        $user_id = $session_model->authentication($token);
+        if ($user_id < 0) {
+            echo json_encode([
+                'success' => 0,
+                'error' => [
+                    'code' => 105,
+                    'message' => 'Wrong token'
+                ]
+            ]);
+            die();
+        }
+        $product_model = $this->loader->getModel('product');
+        if (property_exists($data, 'id')) {
+            $id = $data->id;
+            $product = $product_model->getProductById($id);
+            if (!empty($product)) {
+                $json['success'] = 1;
+                $json['product'] = $product;
+                echo json_encode($json);
+            } else
+                echo json_encode([
+                'success' => 0,
+                'error' => [
+                    'code' => 105,
+                    'message' => 'Wrong id'
+                ]
+            ]);
+            die;
+        } else {
+            $products = $product_model->getAllProducts();
+            if (!empty($products)) {
+                $json['success'] = 1;
+                $json['product'] = $products;
                 echo json_encode($json);
             } else
                 echo json_encode([
