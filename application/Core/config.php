@@ -27,6 +27,13 @@ class Configuration
   private $common = [
     'base_url' => 'http://192.168.33.10'
   ];
+
+  private $smarty = [
+    'templates_dir' => APP.'Views',
+    'configs_dir' => "",
+    'compile_dir' => "",
+    'cache_dir' => ""
+  ];
   
   //настройки базы данных
   private $database = [

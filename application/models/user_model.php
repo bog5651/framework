@@ -6,25 +6,32 @@ class UserModel extends Model
     {
         $ret = null;
         $res = $this->db->query('SELECT 
-      id_user,
-      firstname,
-      secondname,
-      login
-    FROM users WHERE id_user = ?', [$id]);
+        u.id_user,
+        firstname,
+        secondname,
+        login,
+        r.name
+    FROM users u
+    INNER JOIN permissons p ON p.id_user = u.id_user
+    INNER JOIN roles r ON p.id_role = r.id_role
+    WHERE u.id_user = ?', [$id]);
         if (!empty($res)) {
-            $ret = $res[0];
+            return $res[0];
         }
-        return $ret;
+        return -1;
     }
 
     public function getUsers() : array
     {
         $res = $this->db->query('SELECT 
-            id_user,
+            u.id_user,
             firstname,
             secondname,
-            login
-        FROM users');
+            login,
+            r.name
+        FROM users u
+        INNER JOIN permissons p ON p.id_user = u.id_user
+        INNER JOIN roles r ON p.id_role = r.id_role');
         if (!empty($res)) {
             return $res;
         } else {
@@ -32,7 +39,7 @@ class UserModel extends Model
         }
     }
 
-    public function addUser(string $login, string $password, string $fisrtname, string $secondname) : int
+    public function addUser(string $login, string $password, string $fisrtname, string $secondname, int $role_id) : int
     {
         $res = $this->db->query('INSERT INTO users (login, password, firstname, secondname) VALUES (?, ?, ?, ?);', [
             $login,
@@ -41,7 +48,12 @@ class UserModel extends Model
             $secondname
         ]);
         if ($res) {
-            return $this->db->getlastId();
+            $user_id = $this->db->getlastId();
+            $res = $this->db->query('INSERT INTO permissons (id_user, id_role) VALUES (?,?);', [
+                $user_id,
+                $role_id
+            ]);
+            return $user_id;
         }
         return -1;
     }
@@ -102,8 +114,7 @@ class UserModel extends Model
             p.id_role = r.id_role
         WHERE u.id_user = ?
         ', [$id]);
-        if(!empty($row))
-        {
+        if (!empty($row)) {
             return $row[0];
         }
         return false;

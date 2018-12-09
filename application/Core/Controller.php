@@ -8,8 +8,8 @@ abstract class Controller
   public function __construct()
   {
     $this->loader = new Loader();
-    $config = Configuration::getConfiguration();
-	$this->view = View::getInstanse();
+    $this->config = Configuration::getConfiguration();
+    $this->view = View::getInstanse();
   }
 
   public abstract function index();

@@ -3,7 +3,13 @@ class LoginController extends Controller
 {
   public function index()
   {
-    echo("<h>Login index metod<h>");
+    $LB_login = $this->loader->getLibrary("login");
+    if ($LB_login->checkLogin()) {
+      $url = $this->loader->getLibrary('url');
+      $url->redirect($this->config->common['base_url']);
+    } else {
+      $this->view->display("pages/login", ["title" => "Login in"]);
+    }
   }
 
   public function login()

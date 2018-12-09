@@ -32,9 +32,7 @@ class ApiPostController extends Controller
         }
         echo json_encode([
             'success' => 1,
-            'data' => [
-                'token' => $token
-            ]
+            'token' => $token
         ]);
         die();
     }
@@ -88,7 +86,18 @@ class ApiPostController extends Controller
             ]);
             die();
         }
-        $id_user = $user_model->addUser($postRaw->login, $postRaw->password, $postRaw->firstname, $postRaw->secondname);
+        /*
+        +---------+--------+--------+
+        | id_role | name   | weight |
+        +---------+--------+--------+
+        |       1 | Admin  |     99 |
+        |       2 | Banned |      0 |
+        |       3 | Guest  |      1 |
+        |       4 | User   |      2 |
+        |       5 | Baker  |      3 |
+        +---------+--------+--------+*/
+
+        $id_user = $user_model->addUser($postRaw->login, $postRaw->password, $postRaw->firstname, $postRaw->secondname, 4);
         if ($id_user != -1) {
             $session_model = $this->loader->getModel('session');
             $token = $session_model->login($postRaw->login, $postRaw->password);
@@ -104,9 +113,7 @@ class ApiPostController extends Controller
             }
             echo json_encode([
                 'success' => 1,
-                'data' => [
-                    'token' => $token
-                ]
+                'token' => $token
             ]);
             die();
         } else {
@@ -129,12 +136,24 @@ class ApiPostController extends Controller
         $user_id = $session_model->authentication($token);
         if ($user_id > 0) {
             $user_model = $this->loader->getModel('user');
-            $user = $user_model->getUserById($user_id); 
-            echo json_encode([
-                'success' => 1,
-                'user' => $user
-            ]);
-            die();
+            $user = $user_model->getUserById($user_id);
+            if ($user != -1) {
+                echo json_encode([
+                    'success' => 1,
+                    'user' => $user
+                ]);
+                die();
+            }
+            else{
+                echo json_encode([
+                    'success' => 0,
+                    'error' => [
+                        'code' => 105,
+                        'message' => 'Permissions not setup'
+                    ]
+                ]);
+                die();
+            }
         }
         echo json_encode([
             'success' => 0,
@@ -305,7 +324,50 @@ class ApiPostController extends Controller
             ]);
             die;
         }
+    }
 
+    public function PizzaStructute()
+    {
+        $postRow = $this->apiPostRaw(true, true);
+        $data = $postRow;
+        $token = $postRow->token;
+        $session_model = $this->loader->getModel('session');
+        $user_id = $session_model->authentication($token);
+        if ($user_id < 0) {
+            echo json_encode([
+                'success' => 0,
+                'error' => [
+                    'code' => 105,
+                    'message' => 'Wrong token'
+                ]
+            ]);
+            die();
+        }
+        $pizza_model = $this->loader->getModel('pizza');
+        if (!property_exists($data, "id")) {
+            echo json_encode([
+                'success' => 0,
+                'error' => [
+                    'code' => 105,
+                    'message' => 'Not found pizza id in JSON'
+                ]
+            ]);
+            die();
+        }
+        $pizzaStruct = $pizza_model->getStructureByPizzaId($data->id);
+        if (!empty($pizzaStruct)) {
+            $json['success'] = 1;
+            $json['pizza'] = $pizzaStruct;
+            echo json_encode($json);
+        } else
+            echo json_encode([
+            'success' => 0,
+            'error' => [
+                'code' => 105,
+                'message' => 'Wrong id'
+            ]
+        ]);
+        die;
     }
 
     public function baker()
