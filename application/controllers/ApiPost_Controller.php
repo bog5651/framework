@@ -354,7 +354,7 @@ class ApiPostController extends Controller
             $cost = 0;
             $product_model = $this->loader->getModel('product');
             foreach ($struct as $product) {
-                $cost += $product_model->getProductById($product->product_id)['cost'] * $product->count;
+                $cost += $product_model->getProductById($product->id)['cost'] * $product->count;
             }
         }
         //echo $pizza->name.":".$cost;

@@ -48,7 +48,7 @@ class PizzaModel extends Model
         }
         $id = $this->db->getLastId();
         foreach ($struct as $product) {
-            $row = $this->db->query('INSERT INTO structureIzdeliy (id_product, id_izdeliya, count_product) VALUES (?,?,?)', [$product->product_id, $id, $product->count]);
+            $row = $this->db->query('INSERT INTO structureIzdeliy (id_product, id_izdeliya, count_product) VALUES (?,?,?)', [$product->id, $id, $product->count]);
             if (!$row) {
                 echo json_encode($this->db->getError());
                 return $row;
@@ -62,7 +62,11 @@ class PizzaModel extends Model
 
     public function delete(int $id)
     {
-
+        $row = $this->db->query('DELETE FROM izdeliya i WHERE i.id_izdelie = ? ', [$id]);
+        if (!empty($row)) {
+            return $row;
+        }
+        return false;
     }
 }
 ?>
