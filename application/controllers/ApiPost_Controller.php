@@ -473,6 +473,54 @@ class ApiPostController extends Controller
         }
     }
 
+    public function removeProductFromPizza()
+    {
+        $postRow = $this->apiPostRaw(true, true);
+        $data = $postRow;
+        $token = $postRow->token;
+        $session_model = $this->loader->getModel('session');
+        $user_id = $session_model->authentication($token);
+        if ($user_id < 0) {
+            echo json_encode([
+                'success' => 0,
+                'error' => [
+                    'code' => 105,
+                    'message' => 'Wrong token'
+                ]
+            ]);
+            die();
+        }
+        if (!property_exists($data, "product") || !property_exists($data->product, "pizza_id") || !property_exists($data->product, "product_id")) {
+            echo json_encode([
+                'success' => 0,
+                'error' => [
+                    'code' => 105,
+                    'message' => 'Not found pizza or structure in JSON'
+                ]
+            ]);
+            die();
+        }
+        $pizza_model = $this->loader->getModel('pizza');
+        $product = $data->product;
+        $res = $pizza_model->removeProduct($product->pizza_id, $product->product_id);
+        if ($res) {
+            echo json_encode([
+                'success' => 1
+            ]);
+            die();
+        } else {
+            echo json_encode([
+                'success' => 0,
+                'error' => [
+                    'code' => 105,
+                    'message' => 'Inner error'
+                ]
+            ]);
+            die();
+        }
+
+    }
+
     public function request()
     {
         $postRaw = $this->apiPostRaw(true, true);

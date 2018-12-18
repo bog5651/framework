@@ -68,5 +68,17 @@ class PizzaModel extends Model
         }
         return false;
     }
+
+    public function removeProduct(int $pizza_id, int $product_id)
+    {
+        $row = $this->db->query('DELETE FROM structure_izdeliya i WHERE i.id_izdelie = ? AND i.id_product = ?', [
+            $pizza_id,
+            $product_id
+        ]);
+        if (!empty($row)) {
+            return $row;
+        }
+        return false;
+    }
 }
 ?>
