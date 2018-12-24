@@ -284,7 +284,7 @@ class ApiPostController extends Controller
             die();
         }
         $product_model = $this->loader->getModel('product');
-        if (property_exists($data, 'id')) {
+        if (property_exists($data, 'product') && property_exists($data->product, 'id')) {
             $id = $data->id;
             $product = $product_model->getProductById($id);
             if (!empty($product)) {
@@ -312,6 +312,63 @@ class ApiPostController extends Controller
                 'error' => [
                     'code' => 105,
                     'message' => 'Internal error'
+                ]
+            ]);
+            die;
+        }
+    }
+
+    public function removeProduct()
+    {
+        $postRow = $this->apiPostRaw(true, true);
+        $data = $postRow;
+        $token = $postRow->token;
+        $session_model = $this->loader->getModel('session');
+        $user_id = $session_model->authentication($token);
+        if ($user_id < 0) {
+            echo json_encode([
+                'success' => 0,
+                'error' => [
+                    'code' => 105,
+                    'message' => 'Wrong token'
+                ]
+            ]);
+            die();
+        }
+        $product_model = $this->loader->getModel('product');
+        if (property_exists($data, 'product') && (property_exists($data->product, 'product_id'))) {
+            $id = $data->id;
+            $product = $product_model->getProductById($id);
+            if (empty($product)) {
+                echo json_encode([
+                    'success' => 0,
+                    'error' => [
+                        'code' => 105,
+                        'message' => 'Wrong id'
+                    ]
+                ]);
+                die;
+            }
+            $product = $product_model->delete($id);
+            if ($product) {
+                $json['success'] = 1;
+                echo json_encode($json);
+            } else {
+                echo json_encode([
+                    'success' => 0,
+                    'error' => [
+                        'code' => 105,
+                        'message' => 'Inner err'
+                    ]
+                ]);
+                die;
+            }
+        } else {
+            echo json_encode([
+                'success' => 0,
+                'error' => [
+                    'code' => 105,
+                    'message' => 'Err data set. Нет id или product'
                 ]
             ]);
             die;
