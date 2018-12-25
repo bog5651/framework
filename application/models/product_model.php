@@ -32,7 +32,7 @@ class ProductModel extends Model
             $unit
         ]);
         if (!empty($row)) {
-            return $row;
+            return $this->db->getLastId();
         }
         return false;
     }
