@@ -71,7 +71,7 @@ class PizzaModel extends Model
 
     public function removeProduct(int $pizza_id, int $product_id)
     {
-        $row = $this->db->query('DELETE FROM structureIzdeliy i WHERE i.id_izdelie = ? AND i.id_product = ?', [
+        $row = $this->db->query('DELETE FROM structureIzdeliy WHERE id_izdeliya = ? AND id_product = ?', [
             $pizza_id,
             $product_id
         ]);
@@ -84,8 +84,8 @@ class PizzaModel extends Model
     public function addProduct(int $pizza_id, int $product_id, int $count)
     {
         $row = $this->db->query('INSERT INTO structureIzdeliy (id_product, id_izdeliya, count_product) VALUE(?,?,?)', [
-            $pizza_id,
             $product_id,
+            $pizza_id,
             $count
         ]);
         if (!empty($row)) {

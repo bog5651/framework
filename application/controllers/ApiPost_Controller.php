@@ -646,7 +646,7 @@ class ApiPostController extends Controller
             ]);
             die();
         }
-        if (!property_exists($data, "product") || !property_exists($data->product, "pizza_id") || !property_exists($data->product, "product_id")) {
+        if (!property_exists($data, "product") || !property_exists($data->product, "pizza_id") || !property_exists($data->product, "product_id") || !property_exists($data->product,"count")) {
             echo json_encode([
                 'success' => 0,
                 'error' => [
@@ -658,7 +658,7 @@ class ApiPostController extends Controller
         }
         $pizza_model = $this->loader->getModel('pizza');
         $product = $data->product;
-        $res = $pizza_model->removeProduct($product->pizza_id, $product->product_id);
+        $res = $pizza_model->addProduct($product->pizza_id, $product->product_id, $product->count);
         if ($res) {
             echo json_encode([
                 'success' => 1

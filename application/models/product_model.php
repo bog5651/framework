@@ -4,7 +4,7 @@ class ProductModel extends Model
     public function getProductById(int $id)
     {
         $row = $this->db->query('
-        Select product_name, unit, cost  
+        Select *  
         From products 
         Where id_product = ?', [$id]);
         if (!empty($row)) {
