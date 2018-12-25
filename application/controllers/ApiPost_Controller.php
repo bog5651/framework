@@ -337,7 +337,7 @@ class ApiPostController extends Controller
         }
         $product_model = $this->loader->getModel('product');
         if (property_exists($data, 'product') && (property_exists($data->product, 'product_id'))) {
-            $id = $data->id;
+            $id = $data->product->product_id;
             $product = $product_model->getProductById($id);
             if (empty($product)) {
                 echo json_encode([
@@ -557,10 +557,10 @@ class ApiPostController extends Controller
             ]);
             die();
         }
-        
+
         $product_model = $this->loader->getModel('product');
         $product = $data->product;
-        
+
         $id = $product_model->add($product->name, $product->cost, $product->unit);
         if ($id > 0) {
             echo json_encode([

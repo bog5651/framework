@@ -39,7 +39,7 @@ class ProductModel extends Model
 
     public function delete(int $id)
     {
-        $row = $this->db->query('DELETE FROM products p WHERE p.id_product = ? ', [$id]);
+        $row = $this->db->query('DELETE FROM products WHERE id_product = ? ', [$id]);
         if (!empty($row)) {
             return $row;
         }
